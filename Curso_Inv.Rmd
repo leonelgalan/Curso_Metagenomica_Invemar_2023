@@ -1,0 +1,131 @@
+---
+title: "Estudio de microorganismos marinos mediante secuenciación másiva"
+
+author: "J. David Rueda Reyes, Biólogo M. Sc."
+date: "septiembre de 2023"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: true
+    smooth_scroll: true
+    theme: journal
+    highlight: kate
+    df_print: paged
+    code_folding: show
+    
+---
+
+<br>
+
+
+<div>
+
+<p style = 'text-align:center;'>
+
+<img src="https://pacificobiocultural.fao.org.co/wp-content/uploads/2022/11/Logo-Invemar-PNG.png" alt="JuveYell" width="500px">
+</p>
+</div>
+
+
+<div style="text-align: center"> 
+
+[Invemar](http://www.invemar.org.co "Invemar")
+
+</div>
+
+# Microbiomas marinos
+
+<div style="text-align: justify"> 
+
+La biodiversidad siempre a sido una importante línea de investigación debido a su gran relevancia. En estos estudios lo primero en lo que se piensa es en el número de especies presentes y sus abundancias, siendo estos los aspectos más directos y sencillos para iniciar el procesos de comprensión de la diversidad; sin embargo, como nos daremos cuenta en este curso, cuando se habla de biodiversidad hay muchos aspectos o propiedades emergentes que pueden ser tratados.  
+
+Dentro de las multiples aproximaciones para su comprensión y entendimiento, nos centraremos en aquellas que están basadas en la información contenida en el ADN de las distintas especies biologicas presentes en la naturaleza. Teniendo en cuenta esto, inicialmente debemos acceder a está información implementando la extracción y amplificación de marcadores moleculares (regiones concretas del genoma) mediante reacción en cadena de la polimerasa (PCR).
+
+En aquellos estudios en los que se estudian los microorganismos presentes en ambientes (p. ej. marinos, terrestres e incluso en micro ambientes como intestino, piel y hasta materia fecal entre muchos otros) son conocidos como microbiomas
+
+</div>
+
+
+<div style="text-align: justify">
+
+El análisis de datos 
+
+</div>
+
+  
+## Objetivos
+
+### General:
+
+- Analizar microbiomas marinos mediante herramientas genómicas y bioinformaticas.
+
+### Específicos:
+
+- Aprender el manejo básico de las herramientas bioinformaticas necesarias en estudios metataxonómicos.
+
+- Identificar microorganismos marinos a partir de secuenciación másiva de los marcadores moleculares 16S e ITS.
+
+- Desarrollar análisis ecologicos de microbiomas marinos a partir de datos de secuenciación másiva.
+
+
+## Herramientas bioinformaticas
+
+<br>
+
+<div style="text-align: justify">
+
+Para el análisis de las secuencias, es necesario estar familiarizado con lenguajes de programación debido a que muchas de estas herramientas están desarrolladas para ser ejecutadas por lineas de comando. <br>
+
+Conociendo el fundamento básico de as sintaxis de los lenguajes que vamos a utilizar, nos facilitará el manejo de los datos y un mejor análisis de los mismos
+
+</div>
+
+### Coman line
+
+Las lineas de comandos, conocido también como command line, son una serie de instrucciones de acciones a ejecutar que estan codificadas en comandos compuestos por pocas palabras. 
+
+### R y Rstudio
+
+Entorno de programación para diversos análisis estadisticos y representaciones graficas. 
+
+### Git y Github
+
+Herramientas de control de cambio.
+
+### Rmarkdown
+
+Paquete para generar informes de calidad en el que se integran diferentes lenguajes de programación.
+
+
+### Actividad: Repositorio github
+
+Vamos a crear nuestro primer repositorio en el cual alojaremos todas nuestras lineas de comandos (scripts)
+
+## Metataxonomia
+
+La identificación de especies...
+
+### Flujo de trabajo DADA2
+
+Es un paquete...
+
+#### Inspección de las secuencias
+
+#### Dereplicado
+
+#### Corte 
+
+#### Remoción de quimeras
+
+
+## Análisis ecologicos
+
+
+## Caso de estudio invemarino
+
+# FIN
+
+
+
+
