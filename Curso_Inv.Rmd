@@ -42,7 +42,7 @@ La biodiversidad siempre a sido una importante línea de investigación debido a
 
 Dentro de las multiples aproximaciones para su comprensión y entendimiento, nos centraremos en aquellas que están basadas en la información contenida en el ADN de las distintas especies biologicas presentes en la naturaleza. Teniendo en cuenta esto, inicialmente debemos acceder a está información implementando la extracción y amplificación de marcadores moleculares (regiones concretas del genoma) mediante reacción en cadena de la polimerasa (PCR).
 
-En aquellos estudios en los que se estudian los microorganismos presentes en ambientes (p. ej. marinos, terrestres e incluso en micro ambientes como intestino, piel y hasta materia fecal entre muchos otros) son conocidos como microbiomas
+En aquellos estudios en los que se estudian los microorganismos presentes en ambientes (p. ej. marinos, terrestres e incluso en micro ambientes como intestino, piel y hasta materia fecal entre muchos otros) a partir de la extracción de ADN en dichos ambientes son conocidos como microbiomas.
 
 </div>
 
