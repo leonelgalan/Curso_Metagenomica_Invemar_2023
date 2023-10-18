@@ -18,7 +18,6 @@ output:
 
 <br>
 
-
 <div>
 
 <p style = 'text-align:center;'>
@@ -26,7 +25,6 @@ output:
 <img src="https://pacificobiocultural.fao.org.co/wp-content/uploads/2022/11/Logo-Invemar-PNG.png" alt="JuveYell" width="500px">
 </p>
 </div>
-
 
 <div style="text-align: center"> 
 
@@ -38,21 +36,11 @@ output:
 
 <div style="text-align: justify"> 
 
-La biodiversidad siempre a sido una importante línea de investigación debido a su gran relevancia. En estos estudios lo primero en lo que se piensa es en el número de especies presentes y sus abundancias, siendo estos los aspectos más directos y sencillos para iniciar el procesos de comprensión de la diversidad; sin embargo, como nos daremos cuenta en este curso, cuando se habla de biodiversidad hay muchos aspectos o propiedades emergentes que pueden ser tratados.  
+La biodiversidad siempre a sido una importante línea de investigación debido a su gran relevancia. En estos estudios lo primero en lo que se piensa es en el número de especies presentes y sus abundancias, siendo estos los aspectos más directos y sencillos para iniciar el procesos de comprensión de la diversidad; sin embargo, como nos daremos cuenta en este curso, cuando se habla de biodiversidad hay muchos aspectos o propiedades emergentes que pueden ser tratados. Dentro de las multiples aproximaciones para su comprensión y entendimiento, nos centraremos en aquellas que están basadas en la información contenida en el ADN de las distintas especies biologicas presentes en la naturaleza. 
 
-Dentro de las multiples aproximaciones para su comprensión y entendimiento, nos centraremos en aquellas que están basadas en la información contenida en el ADN de las distintas especies biologicas presentes en la naturaleza. Teniendo en cuenta esto, inicialmente debemos acceder a está información implementando la extracción y amplificación de marcadores moleculares (regiones concretas del genoma) mediante reacción en cadena de la polimerasa (PCR).
-
-En aquellos estudios en los que se estudian los microorganismos presentes en ambientes (p. ej. marinos, terrestres e incluso en micro ambientes como intestino, piel y hasta materia fecal entre muchos otros) a partir de la extracción de ADN en dichos ambientes son conocidos como microbiomas.
+ En aquellos estudios en los que se identifican los microorganismos presentes en ambientes (p. ej. marinos, terrestres e incluso en micro ambientes como intestino, piel y hasta materia fecal entre muchos otros) mediante secuenciación de los marcadores moleculares 16S e ITS son conocidos como microbiomas. Dada la implementación de tecnicas de secuenciación masiva podemos no solo identificar especies, si no también, inferir sus abundancias, calcular indices de biodiversidad e interrelacionar los datos con caracteristicas del ambiente en el que fueron tomadas.
 
 </div>
-
-
-<div style="text-align: justify">
-
-El análisis de datos 
-
-</div>
-
   
 ## Objetivos
 
@@ -75,19 +63,44 @@ El análisis de datos
 
 <div style="text-align: justify">
 
-Para el análisis de las secuencias, es necesario estar familiarizado con lenguajes de programación debido a que muchas de estas herramientas están desarrolladas para ser ejecutadas por lineas de comando. <br>
+Para el análisis de las secuencias, es necesario estar familiarizado con lenguajes de programación debido a que muchas de estas herramientas están desarrolladas en dichos lenguajes y para ser ejecutadas se deben utilizar las lineas de comando pertinentes. Conociendo el fundamento básico de la sintaxis de los lenguajes que vamos a utilizar, nos facilitará el manejo de los datos y un mejor análisis de los mismos, por tanto, vamos a comenzar con familirizarnos inicialmente con la linea de comando (command line) de la terminal disponible en los sistemas linux/UNIX.  <br>
 
-Conociendo el fundamento básico de as sintaxis de los lenguajes que vamos a utilizar, nos facilitará el manejo de los datos y un mejor análisis de los mismos
+Para este proposito y por facilidad, vamos a utilizar el sistema operativo Ubunto basado en linux el cuál trae por defecto una consola o termianl (interfaz para ejecutar las funciones de los comandos) donde trabajaremos cmediante command line. La Consola de Linux en particular de forma nativa reconoce el lenguaje de programación *bash* pero además también desde está se pueden ejecutar los binarios (programas) de otros lenguajes de programación siempre que se cuenten con sus librerias.
 
 </div>
 
-### Coman line
+### Comand line
 
-Las lineas de comandos, conocido también como command line, son una serie de instrucciones de acciones a ejecutar que estan codificadas en comandos compuestos por pocas palabras. 
+<div style="text-align: justify">
+
+Las lineas de comandos, conocido también como command line, son una serie de instrucciones a ejecutar, las cuales estan codificadas en comandos o palabras clave. Estos tienen una función asociada y los detalles de está son especificados por sus parametros. El primer paso es identificar el directorio, carpeta o lugar de nuestro equipo en el que nos encontramos; para esto ejecutamos el comando pwd().
+
+</div>
+
+```{bash eval=FALSE}
+# Principales comandos:
+
+pwd() # muestra el path del directorio en el que nos encontramos
+cd /home/usuario/Escritorio # nos lleva al repositorio indicado por la ruta
+cd .. # nos regresa al repositorio inmediatamente anterior al que nos encontremos
+ls -l # muestra los elementos del directorio y los organiza en un listado
+cp nombre_archivo.txt /home/usuario/Escritorio # copia un archivo y lo pega en la dirección que se le indica
+rm nombre_archivo.txt # remueve o borra el archivo indicado
+
+# tip: Para indicar que la función se realice a varios archivos utilizamos el [*.txt], de está manera se seleccionan todos los archivos con terminación .txt sin tener en cuenta el nombre que lo antecede.
+
+```
+
+
 
 ### R y Rstudio
 
-Entorno de programación para diversos análisis estadisticos y representaciones graficas. 
+<div style="text-align: justify">
+
+Entorno de programación para diversos análisis estadisticos y representaciones graficas.
+
+</div>
+ 
 
 ### Git y Github
 
@@ -125,7 +138,3 @@ Es un paquete...
 ## Caso de estudio invemarino
 
 # FIN
-
-
-
-
