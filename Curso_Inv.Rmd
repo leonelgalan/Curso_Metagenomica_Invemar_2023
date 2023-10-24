@@ -127,13 +127,31 @@ Es un paquete...
 
 #### Dereplicado
 
-#### Corte 
+Selección de secuencias representativas (sin tener en cuenta las secuencias identicas) para optimizar los subsecuentes análisis
+
+#### Filtrado y Corte
+
+Filtramos por calidad de las secuencias, frecuencia de las lecturas y corte de las regiones con baja calidad
+
+#### Ensamblado de lecturas
+
+Ensamblamos las lecturas complementarias (forward and reverse).
 
 #### Remoción de quimeras
 
+Se retiran del análisis aquellas secuencias quimericas (falsas secuencias)
+
+#### Inferencia de secuencias variantes ASV
+
+Se realiza la inferencia de las secuencias variantes (homologas a OTU´s)
+
+#### Asignación de especies
+
+Se realiza un cruce de las secuencias ASV con bases de datos para realizar la asignación de especies.
 
 ## Análisis ecologicos
 
+### 
 
 ## Caso de estudio invemarino
 
