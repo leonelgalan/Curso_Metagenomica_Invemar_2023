@@ -1,0 +1,901 @@
+---
+title: "Práctica en análisis de datos metagonómicos mediante herramientas bioinformaticas"
+
+author: "J. David Rueda Reyes, Biólogo M. Sc."
+date: "14 noviembre de 2023"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: true
+    smooth_scroll: true
+    theme: journal
+    highlight: kate
+    df_print: paged
+    code_folding: show
+    
+---
+
+<br>
+
+<div>
+
+<p style = 'text-align:center;'>
+
+<img src="https://pacificobiocultural.fao.org.co/wp-content/uploads/2022/11/Logo-Invemar-PNG.png" alt="JuveYell" width="600px">
+</p>
+</div>
+
+<div style="text-align: center">
+
+[Invemar](http://www.invemar.org.co "Invemar")
+
+</div>
+
+# Metagenómica de microorganismos marinos
+
+## Introducción
+
+<div style="text-align: justify">
+
+La biodiversidad siempre ha sido una importante línea de investigación debido a su gran relevancia. En estos estudios lo primero en lo que se piensa es en el número de especies presentes y sus abundancias, siendo estos los aspectos más directos y sencillos para iniciar el procesos de comprensión de la diversidad; sin embargo, como nos daremos cuenta en este curso, cuando se habla de biodiversidad hay muchos aspectos o propiedades emergentes que pueden ser tratados. Dentro de las múltiples aproximaciones para su comprensión y entendimiento, nos centraremos en aquellas basadas en la información contenida en el ADN de las distintas especies presentes en la naturaleza.
+
+En aquellos estudios en los que se identifican los microorganismos presentes en ambientes (p. ej. marinos, terrestres e incluso en microambientes como piel y materia fecal mediante secuenciación masiva de marcadores moleculares son conocidos como microbiomas. Dada la implementación de técnicas de secuenciación masiva podemos además de identificar especies, también, es posible conocer sus abundancias y analizar su biodiversidad. Incluso interrelacionar los datos con características del ambiente en el que fueron tomadas. Esto acelera nuestra comprensión y entendimiento de la riqueza biológica que poseemos, la cual, está en riesgo y es de suma importancia tener a disposición herramientas rápidas, económicas y precisas para aportar las bases científicas necesarias en la toma de decisiones de conservación.
+
+</div>
+ 
+## Objetivos
+
+### General:
+
+- Analizar datos metagenómicos mediante herramientas bioinformáticas.
+
+### Específicos:
+
+- Aprender el manejo básico de herramientas bioinformáticas para metagenómica de microorganismos.
+
+- Identificar microorganismos marinos a partir de secuenciación del marcador molecular 16S.
+
+- Caracterizar comunidades microbiomas de sedimentos marinos.
+
+
+## Herramientas bioinformáticas
+
+<div style="text-align: justify">
+
+El desarrollo de las tecnologías genómicas han permitido analizar la diversidad biológica de una manera más completa, ampliando nuestro entendimiento sobre la relación y el efecto entre genes, especies, comunidades y ambiente. Estos avances han aumentado significativamente la cantidad de datos obtenidos, haciendo de su análisis algo complejo que, además, requiere de herramientas y técnicas especializadas capaces de procesar millones de datos. Es así como toman relevancia las herramientas computacionales, las cuales, mediante múltiples programas (software) permiten sacar provecho de toda la información generada.
+
+</div>
+
+<div style="text-align: justify">
+
+La mayoría de estos programas son una serie de comandos que realizan por nosotros los cálculos y análisis necesarios. Para el estudio de secuencias, es necesario estar familiarizado con lenguajes de programación debido a que muchos de estos están desarrollados en dichos lenguajes y para ser ejecutadas se deben utilizar las líneas de comando pertinentes. Conociendo el fundamento básico de la sintaxis del lenguaje que vamos a utilizar, nos facilitará el manejo de los datos y un mejor análisis de los mismos, por tanto, vamos a comenzar con familiarizarnos con el lenguaje de programación **R** mediante la interfaz gráfica Rstudio.
+
+</div>
+
+
+### R y Rstudio
+
+<div style="text-align: justify">
+
+**R** es un entorno de programación para diversos análisis estadísticos y representaciones gráficas. Es popular en la ciencia de datos debido a su versatilidad, pues con relativa facilidad se pueden integrar funciones y paquetes de otros lenguajes de programación, también es muy eficiente en el manejo de datos pesados, presenta un lenguaje (sintaxis) sencillo y genera gráficos de excelente calidad.
+
+Lo primero que debemos realizar es descargar **R** ingresando al siguiente link, seleccionamos el sistema operativo de tu equipo y seguimos las instrucciones de instalación:
+
+
+<div>
+
+<p style = 'text-align:center;'>
+
+<img src="C:\Users\USUARIO\Desktop\workshop\intall_r.png"
+alt="JuveYell" width="600px">
+</p>
+</div>
+
+<div style="text-align: center">
+
+[Descargar r](https://cloud.r-project.org "Descargar r")
+
+</div>
+
+<div style="text-align: justify">
+
+Para que la interacción con **R** sea mucho más completa y sencilla, también haremos uso de **Rstudio**, un ambiente integrado de desarrollo (IDE) para **R** y **phyton**. Vamos a descargarlo en su versión de Escritorio ingresando al siguiente link:
+
+<div>
+
+<p style = 'text-align:center;'>
+
+<img src="C:\Users\USUARIO\Desktop\workshop\instal_Rstudio.png"
+alt="JuveYell" width="600px">
+</p>
+</div>
+
+<div style="text-align: center">
+
+[Descargar Rstudio](https://posit.co/download/rstudio-desktop/ "Descargar Rstudio")
+
+</div>
+
+<div style="text-align: justify">
+
+La mejor manera de utilizar estás herramientas es mediante la construcción e implementación de tu código en archivo de texto conocido como *script*, en los cuales consignará todo tu código. También es importante tener presente los principales factores por los cuales vamos a utilizar **R**:
+
+- Comprensión y dominio las acciones que ejecutas en tu análisis
+- Rápida **reproducibilidad**
+- Edición, corrección y ajuste de tu *script*
+- Agregar comentarios y observaciones de tus análisis en el *script*
+- Gran variedad de gráficos de alta calidad.
+
+Al abrir **Rstudio** nos encontraremos con 4 secciones, cada una con funciones específicas:
+
+- Superior-izquierda: Editor de texto
+- Superior-derecha: Ambiente e historial de trabajo
+- Inferior-izquierda: Consola de **R**
+- Inferior-derecha: Archivos, gráficos, paquetes y ayuda
+
+<p style = 'text-align:center;'>
+
+<img src="C:\Users\USUARIO\Desktop\workshop\Rstudio_interfaz.png"
+alt="JuveYell" width="600px">
+</p>
+
+</div>
+
+<div style="text-align: justify">
+Los estudios metagenómicos son relativamente recientes, con lo cual, constantemente diseñan nuevos paquetes para complementar y actualizar los análisis. Esto hace que debamos recurrir a muchos complementos para poder llevar a cabo un correcto estudio de datos metagenómicos. Muchos de los complementos están en desarrollo, por tanto, para los usuarios windows es recomendable también instalar **Rtools**
+
+</div>
+
+<p style = 'text-align:center;'>
+
+<img src="C:\Users\USUARIO\Desktop\workshop\instal_rtools.png"
+alt="JuveYell" width="600px">
+</p>
+
+</div>
+
+<div style="text-align: center">
+
+[Descargar Rtool](https://cran.r-project.org/bin/windows/Rtools/rtools43/rtools.html "Descargar Rtools")
+
+</div>
+
+<div style="text-align: justify">
+
+Ya identificadas las partes del programa, podemos empezar. En el editor de texto vamos a abrir un nuevo *script* oprimiendo Ctrl + Shift + N, e inmediatamente se abrirá en una pestaña un documento en blanco donde escribiremos todas nuestras líneas de comandos. Como se había mencionado, es posible agregar comentarios en el *script* simplemente anteponiendo `#´, sin embargo, lo más importante son los comandos o códigos que realizan una función concreta. Estos están compuestos por 2 partes, 1) el nombre del código y 2) sus parámetros.
+
+Veamos un ejemplo:
+
+</div>
+
+```{r  eval=FALSE, comment=FALSE}
+# Esto es un comentario
+install.packages("devtools") # Esto es un comando
+
+# cargar paquete a nuestro entorno de trabajo
+library("devtools")
+
+```
+
+<div style="text-align: justify">
+
+Acá nos encontramos con el comando **install.packages()** para instalar un paquete, en este caso es **devtools**. Posteriormente y para acceder a las funciones debemos cargar a nuestro entorno de trabajo el paquete que vamos a utilizar.
+
+</div>
+
+
+### Instalación de Paquetes
+
+<div style="text-align: justify">
+
+Los análisis que vamos a ejecutar en esta práctica son realizados por las funciones de los diferentes paquetes que se van a instalar. También es necesario inicialmente instalar paquetes dependencias que permitan el funcionamiento de otros paquetes.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# Paquete de soporte para la instalación y manejo de otros paquetes
+install.packages(c("vegan", "plotrix", "remotes"))
+
+library("remotes") # instalar paquetes desde repositorios alternos
+
+
+install_github("cpauvert/psadd")
+install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
+install_github("kasperskytte/ampvis2")
+
+```
+
+<div style="text-align: justify">
+
+La mayoría de los paquetes que vamos a utilizar hacen parte del proyecto Bioconductor, un repositorio de libre acceso para el desarrollo de software libre enfocado en análisis bioinformáticos. Por tanto, debemos iniciar con instalar el administrador de Bioconductor para acceder a los diferentes paquetes que vamos a implementar.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+if (!require("BiocManager", quietly = TRUE))
+	install.packages("BiocManager")
+
+BiocManager::install(version = "3.18")
+
+library(BiocManager)
+# Al aparecer el mensaje:
+# Upgrade 32 packages to Bioconductor version '3.18'? [y/n]:
+# En la consola damos 'y' + Enter
+
+install(c("phyloseq", "dada2", "DESeq2", "DECIPHER", "phangorn", "ShortRead",
+	"microbiome", "mixOmics", "metagenomeSeq", "BiocStyle"))
+
+# En este caso:
+# Update all/some/none? [a/s/n]:
+# En la consola damos a + Enter, también aparecerán ventanas
+# emergentes a las cuales debemos aceptar para actualizar los paquetes
+
+```
+
+
+<div style="text-align: justify">
+
+Ahora que tenemos todos los paquetes necesarios instalados desde sus repositorios específicos, vamos entonces a cargarlos en conjunto utilizando la función ipak, la cual, no solo carga los paquetes instalados, también descarga y carga desde el repositorio principal de **R** los paquetes que aún no hemos descargado. Al ejecutar este comando, podemos notar que en la sección de ambiente de trabajo se generó un objeto llamado ipak de tipo función. Posteriormente al ejecutar el segundo comando se crea un objeto de tipo caracter, en el cual, están contenidos los nombres de los paquetes que deseamos instalar y cargar.
+
+</div>    
+
+<div style="text-align: justify">
+
+Esto nos enseña algo más sobre la manera en que funciona **R**, por una parte, vemos que las funciones contienen las instrucciones exactas de que se debe hacer, y por la otra, que los objetos son contenedores en los que se aloja información. Estos elementos son esenciales pues proveen a **R** pues son aquellos con los cuales estaremos interactuando durante el uso del programa. Finalmente, al ejecutar al ejecutar el comando veremos que en la consola de **R** se ejecutan o realizan los procesos indicados sobre el objeto determinado.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# función para cargar varios paquetes al tiempo
+ipak <- function(pkg){
+	new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+	if (length(new.pkg))
+    	install.packages(new.pkg, dependencies = TRUE)
+	sapply(pkg, require, character.only = TRUE)
+}
+
+# Paquetes que deseamos cargar
+packages <- c("BiocManager", "BiocStyle", "phangorn", "gridExtra", "devtools", "dplyr",
+          	"DESeq2", "phyloseq", "dada2", "DECIPHER", "knitr", "ShortRead", "stats",
+          	"mixOmics", "metagenomeSeq", "microbiome", "pairwiseAdonis", "nlme", "plotly",
+          	"digest", "VennDiagram", "optparse", "futile.logger", "tidyverse", "kableExtra",
+          	"metacoder", "amp hs2", "stats", "ggpubr", "gg scale", "reshape2", "coin")
+
+# función(objeto)
+ipak(packages)
+
+```
+
+
+# Metagenómica de microorganismos marinos
+
+<div style="text-align: justify">
+
+Las secuencias fueron obtenidas mediante secuenciación masiva (paired-end) con la tecnología Illumina MySeq a partir de muestras de sedimentos marinos provenientes de las inmediaciones de los ríos San Juan y el Atrato, ubicados en el Pacífico y al sur del Atlántico colombiano respectivamente. En esta práctica vamos a implementar un análisis basado en la inferencia de ASV mediante el algoritmo DADA2 de Benjamin Callahan y colaboradores (2017).
+
+<p style = 'text-align:center;'>
+
+<img src="C:\Users\USUARIO\Desktop\workshop\workflow.png"
+alt="JuveYell" width="600px">
+</p>
+</div>
+
+<div style="text-align: center">
+
+Es importante indicar en donde se encuentran los datos, por tanto, debemos seleccionar la ubicación de los mismos, es decir, el directorio de trabajo. Además, vamos a crear un objeto con la dirección donde están las secuencias.
+
+</div>
+
+<div style="text-align: left">
+
+*[Datos metagenómica workshop](https://invemarsantamarta-my.sharepoint.com/:f:/g/personal/jesus_rueda_invemar_org_co/EkMvyHivpu9Np1nGaDis9fMBPqlTXFTit17OnUBLYcalGg?e=413Ov8 "Datos metagenómica workshop")
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# Directorio de trabajo
+setwd("C:/Users/USUARIO/Desktop/workshop")
+
+# Ruta de las secuencias
+path <- "C:/Users/USUARIO/Desktop/workshop/data_set/"
+
+```
+
+### Pre-tratamiento de secuencias
+
+<div style="text-align: justify">
+
+La información más importante es la obtenida en la secuenciación, por tanto, debemos hacer una inspección de las lecturas (*reads* en Inglés). En este paso veremos el número de lecturas y también la longitud de las mismas. También veremos los nucleótidos de las lecturas, esto nos permite identificar la presencia de los oligonucleótidos correspondientes a los *primer's* o cebadores. En nuestro caso los cebadores utilizados fueron Bakt_34: CCTACGGGNGGCWGCAG y bAKT_805: GACTACHVGGGTATCTAATCC, *forward* y *reverse* respectivamente.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# cargar los archivos con las reads
+fq <- ShortRead::readFastq(dirPath = path, pattern = "*.fastq.gz", full.names = TRUE)
+
+# visualización
+ShortRead::sread(fq)
+
+# semilla para procesos de aleatorización
+set.seed(3728)
+
+```
+
+
+<div style="text-align: justify">
+
+En este caso podemos identificar a simple vista la presencia de los *primer's* en las secuencias, con lo cual, debemos tenerlo en cuenta al momento de realizar la depuración de las secuencias. Una vez hecha la inspección de las secuencias, verifiquemos cuantas muestras tenemos, las organizamos y creamos un objeto con los nombres correspondientes a cada muestra separado de la terminación "_R1_001.fastq.gz" de los archivos.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# Lista de los archivos fastq
+list.files(path)
+
+# organizar los archivos
+fnFs <- sort(list.files(path, pattern = "_R1_001.fastq.gz", full.names = TRUE))
+fnRs <- sort(list.files(path, pattern = "_R2_001.fastq.gz", full.names = TRUE))
+
+# vector con los nombres
+sample.names <- sapply(strsplit(basename(fnFs), "_"), `[`, 1)
+
+# observar algunos nombres del vector que se creó con los nombres
+head(sample.names)
+
+```
+
+<div style="text-align: justify">
+
+Las reacciones tanto de PCR como de secuenciación suelen ocurrir errores, con lo cual, genera incertidumbre en la información, por tanto, debemos verificar la calidad de las lecturas según los puntajes de calidad (*phred score* [Q]) en la asignación de las bases nucleotídicas en cada posición de las diferentes lecturas. Una manera fácil de verificarlas todas es mediante un gráfico.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# lecturas forward
+plotQualityProfile((fnFs[1:2]))
+
+# lecturas reverse
+plotQualityProfile((fnRs[1:2]))
+
+# valores Q inferiores a 30 son considerados de baja calidad
+
+```
+
+
+<div style="text-align: justify">
+
+Generalmente, al final de las lecturas suele acumularse mucho error debido al agotamiento de las reacciones químicas en los procesos de PCR y secuenciación. Esto es aún más evidente en las lecturas *reverse* presentando aún mayor proporción de error. En nuestros gráficos vemos como esa calidad decae a las 280 pares de bases (pb) y a las 220 pb en las lecturas *forward* y *reverse* respectivamente.
+
+</div>
+
+### Filtrado y corte
+
+<div style="text-align: justify">
+
+Sabiendo que tenemos presencia de los *primer's* y de que la calidad de las secuencias decae al final de las lecturas (F 280pb / R 220pb), debemos filtrar todas las lecturas que no cumplan el estándar de calidad general, cortar los extremos de baja calidad (Q < 30) y cortar los oligos de los *primer's*. Para esto, creamos una carpeta (repositorio) donde guardar las lecturas filtradas.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# objetos con las secuencias filtradas
+filtFs <- file.path(path, "filtered", paste0(sample.names, "_F_filt.fastq.gz"))
+filtRs <- file.path(path, "filtered", paste0(sample.names, "_R_filt.fastq.gz"))
+
+# filtrado y corte
+
+out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs,
+                 	truncLen=c(280, 230), trimLeft = c(17, 21),
+                 	maxN=0, maxEE=c(2,2), truncQ=2, rm.phix=TRUE,
+                 	compress=TRUE, multithread=FALSE) # En Windows configurar multithread=FALSE
+
+# magnitud del filtrado realizado
+out
+
+```
+
+<div style="text-align: justify">
+
+Vamos a verificar la calidad de las secuencias posteriormente al filtrado y corte de las mismas.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+plotQualityProfile((filtFs[1:2]))
+plotQualityProfile((filtRs[1:2]))
+
+```
+
+<div style="text-align: justify">
+
+*NOTA*: Durante el proceso de análisis es posible encontrarnos con errores y cierres inesperados de **R**, lo que nos hace perder todos los objetos de nuestro ambiente de trabajo. Por este motivo es recomendable hacer un respaldo de nuestro ambiente de trabajo o de objetos concretos y posteriormente volverlos a cargar sin necesidad de ejecutar el comando que lo generó. Para esto tenemos la posibilidad de utilizar los siguientes comandos
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# respaldo del ambiente de trabajo en un archivo .RData
+save.image(file = "metagenomica_workspace.RData")
+
+# respaldo de un objeto concreto
+saveRDS(objeto, file = "nombre del archivo.RDS")
+
+# Estos se guardaran automáticamente dentro del repositorio de trabajo
+
+# cargar el ambiente de trabajo
+load("C:/Users/USUARIO/Desktop/workshop/nombre del archivo .RData")
+
+#
+nombre <- readRDS("C:/Users/USUARIO/Desktop/workshop/nombre del archivo .RDS")
+
+```
+
+
+### Error
+
+<div style="text-align: justify">
+
+El paquete DADA2 se fundamenta en un modelo paramétrico en el que calcula la frecuencia de error propia en cada muestra, con lo cual, es posible diferenciar entre aquellas secuencias que son producto de errores en los procesos de secuenciación de aquellas con mayor probabilidad de corresponder realmente a microorganismos. De está manera podemos obtener mayor resolución respecto la identificación obtenida con OTU's.
+
+</div>
+
+<div style="text-align: justify">
+
+Se debe tener en cuenta que al ser datos metagenómicos es muy posible que tengamos cientos de muestras idénticas correspondientes al mismo microrganismo. Para hacer más eficiente el proceso de análisis, se recomienda realizar un proceso llamado de-replicado en el que resumimos aquellas lecturas idénticas en 1 sola y de está manera optimizar esfuerzo computacional para el cálculo del modelo de error.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# Dereplicado
+derepFs <- derepFastq(filtFs, verbose=TRUE)
+derepRs <- derepFastq(filtRs, verbose=TRUE)
+
+# agregar nombre de los archivos dereplicados
+names(derepFs) <- sample.names
+names(derepRs) <- sample.names
+
+# modelo parametrico
+errF <- learnErrors(filtFs, multithread=TRUE)
+errR <- learnErrors(filtRs, multithread=TRUE)
+
+# ajuste del modelo a las secuencias
+plotErrors(errF, nominalQ = TRUE)
+plotErrors(errR, nominalQ = TRUE)
+
+```
+
+<div style="text-align: justify">
+
+Cada gráfico nos muestra la tasa de error para cada posición y que tanto se ajusta el modelo obtenido con la variabilidad de los nucleótidos de las lecturas analizadas.
+
+</div>
+
+### Inferencia ASV
+
+<div style="text-align: justify">
+
+Una vez calculado el modelo de error podemos proceder a la asignación o establecimiento de los ASV. Estas son aquellas lecturas únicas entre todas las lecturas secuenciadas en la muestra
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# inferencia de ASV
+dadaFs <- dada(derepFs, err=errF, multithread=TRUE, pool = TRUE) # para lecturas forward
+dadaRs <- dada(derepRs, err=errR, multithread=TRUE, pool = TRUE) # para lecturas reverse
+
+# inspección del archivo dada
+dadaFs[[1]] # lecturas forward
+dadaRs[[1]] # lecturas reverse
+
+```
+
+### Ensamblado
+
+<div style="text-align: justify">
+
+Las lecturas al ser *paired end* es necesario realizar el ensamblaje de las mismas, teniendo la previsión de que entre estas tengamos al menos 20pb de sobreposición para un correcto ensamblado. Además, vamos a generar un archivo .csv en el cual tengamos todas las secuencias ensambladas obtenidas, con lo cual, en principio son los distintos microorganismos presentes.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# ensamblado
+mergers <- mergePairs(dadaFs, derepFs, dadaRs, derepRs)
+
+# tablas de las secuencias ensambladas
+seqtabAll <- makeSequenceTable(mergers[!grepl("mock", names(mergers))])
+table(nchar(getSequences(seqtabAll)))
+dim(seqtabAll) # dimensión de la tabla
+
+```
+
+### Quimeras
+
+
+<div style="text-align: justify">
+
+Ya se ha mencionado que en el proceso de replicación (PCR) se producen errores conocidos como artefactos. Estos en el proceso de ensamblado forman secuencias quiméricas, las cuales, no corresponden a organismos. Estas deben ser removidas.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# remoción de secuencias quiméricas
+seqtabNoC <- removeBimeraDenovo(seqtabAll)
+
+```
+
+
+### Identificación taxonómica
+
+<div style="text-align: justify">
+
+Partiendo del objeto sin quimeras **DADA2** realiza un cotejo de nuestras secuencias con las plenamente identificadas que están alojadas en la base de datos. En está ocasión utilizaremos la base de datos SILVA versión 138.1 que es una de las más completas, actualizadas y utilizadas en este tipo de estudios.Tener en cuenta que por defecto la clasificación se realiza hasta nivel de género, sin embargo, también generamos una tabla hasta nivel de especie en los casos en que este nivel de clasificación sea obtenido.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# objeto con la ruta de la base de datos
+fastaRef <- "C:/Users/USUARIO/Desktop/workshop/reference_data/silva_nr99_v138.1_train_set.fa"
+
+# Asignación taxonómica (hasta género)
+taxa <- assignTaxonomy(seqtabNoC, fastaRef, multithread=TRUE)
+
+# Tabla de identificación
+write.csv(taxa, "tabla_genus_id_taxa_silva138.csv")
+
+# Tabla hasta nivel de especie
+taxa_sp <- addSpecies(taxa, "C:/Users/USUARIO/Desktop/workshop/reference_data/silva_species_assignment_v138.1.fa", verbose=TRUE)
+
+# Tabla de identificación
+write.csv(taxa_sp, "tabla_sp_id_taxa_silva138.csv")
+
+```
+
+<div style="text-align: justify">
+
+Recordemos que estas secuencias hacen parte de una región hiper variante del gen 16S [V3-V4]. En general este gen es muy conservado por su importancia en la expresión genética, sin embargo, está región específica nos provee de la suficiente variabilidad como para explorar las relaciones filogenéticas entre los microorganismos presentes.
+
+</div>
+
+* Separemos las secuencias en 1 objeto y las alineamos
+
+```{r eval=FALSE, comment=FALSE}
+
+seqs <- getSequences(seqtabNoC)
+
+# asignar nombres a cada secuencia
+names(seqs) <- seqs
+
+# alineamiento de la secuencias
+alignment <- AlignSeqs(DNAStringSet(seqs), anchor=NA, verbose=F)
+
+```
+
+* Con el alineamiento generamos un árbol inicial mediante *neighbor joining* (N-J) desde el cual podremos hacer una búsqueda del mejor árbol basado en máxima verosimilitud ajustado a un modelo de evolución nucleotídica GTR optimizando las posiciones invariantes y el parámetro gamma.
+
+```{r eval=FALSE, comment=FALSE}
+
+#  Crear objeto phyDat
+phangAlign <- phyDat(as(alignment, "matrix"), type="DNA")
+
+# Distancias pareadas entre las secuencias
+dm <- dist.ml(phangAlign)
+
+# Árbol Neighbor-Joining
+treeNJ <- NJ(dm)
+
+# Verosimilitud del árbol
+fit = pml(treeNJ, data=phangAlign)
+
+# Agregan parámetros
+fitGTR <- update(fit, k=4, inv=0.2)
+
+# optimizamos el modelo
+fitGTR <- optim.pml(fitGTR, model="GTR", optInv=TRUE, optGamma=TRUE,
+                	rearrangement = "NNI", control = pml.control(trace = 0))
+
+
+detach("package:phangorn", unload=TRUE)
+
+```
+
+<div style="text-align: justify">
+
+En este punto ya tenemos la información más importante que podemos obtener, que es, la clasificación taxonómica, las abundancias y las relaciones filogenéticas de todas las lecturas amplificadas en la muestra. Ahora podemos proceder a realizar los principales análisis ecológicos para caracterizar estas comunidades de microorganismos.
+
+</div>
+
+* Para los análisis ecológicos vamos a crear un objeto *physeq* en el cual tendremos toda la información en 1 solo objeto junto con variables adicionales tomadas en los puntos de muestreo (metadata).
+
+```{r eval=FALSE, comment=FALSE}
+
+# Cambiamos la ruta donde está archivo "metadata_workshop.csv"
+samdf <- read.csv("C:/Users/USUARIO/Desktop/workshop/metadata/metadata_workshop.csv",
+              	header=TRUE, row.names = 1)
+# Verificar nombres de las tablas y la metadata
+rownames(seqtabNoC) %in% rownames(samdf)
+all(rownames(seqtabNoC) %in% rownames(samdf))
+
+# Crear objeto physeq
+ps_16s <- phyloseq(otu_table(seqtabNoC, taxa_are_rows=FALSE),
+           	sample_data(samdf),
+           	tax_table(taxa),
+           	phy_tree(fitGTR$tree))
+
+# Inspección del objeto
+ps_16s
+
+
+# guardar el objeto physeq
+saveRDS(ps_16s, file = "ps_16s.RDS")
+
+```
+
+
+# Análisis de diversidad
+
+<div style="text-align: justify">
+
+La diversidad biológica en nuestro caso corresponde al nivel genético, sin embargo, podemos aplicar conceptos ecológicos de comunidades clásicas en donde estimaremos aspectos como riqueza de especies (Alpha diversidad) y las diferencias o similitudes entre en cada una de las comunidades (Beta diversidad).
+
+</div>
+
+<div style="text-align: justify">
+
+En estos análisis los taxa con baja prevalencia (*singleton* y *doubletons*) son problemáticos ya que suelen corresponder errores en la clasificación taxonómica, por tanto, no pueden ser tenidos en cuenta. Así que vamos a calcular las prevalencias e identificar estos taxa problemáticos para sustraerse de los análisis subsecuentes.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# objeto de trabajo
+psd <- ps_16s
+
+# Computamos prevalencia para cada feature y la guardamos en un data frame
+prevdf = apply(X = otu_table(psd),
+           	MARGIN = ifelse(taxa_are_rows(psd), yes = 1, no = 2),
+           	FUN = function(x){sum(x > 0)})
+
+# Le agregamos la taxonomía
+prevdf = data.frame(Prevalence = prevdf,
+                	TotalAbundance = taxa_sums(psd),
+                	tax_table(psd))
+
+plyr::ddply(prevdf, "Phylum",  
+        	function(df1){cbind(mean(df1$Prevalence),sum(df1$Prevalence))}) -> dfprev
+
+# visualizamos la tabla de prevalencia
+# columna 1 = número de lecturas
+# columna 2 = sumatoria.
+
+dfprev
+
+# es pertinente filtrar esos filo representados sólo por 1 read ya pueden ser falsos positivos
+
+```
+
+* Ya identificados, vamos a removerlos de nuestro objeto de trabajo
+
+```{r eval=FALSE, comment=FALSE}
+
+# Indicamos aquellos filo a remover
+filterPhyla = c("Dadabacteria", "Deinococcota", "Euryarchaeota", "Fusobacteriota", "FW113",
+            	"LCP-89", "Modulibacteria", "RCP2-54", "WPS-2", "CK-2C2-2", "Asgardarchaeota")
+
+# Procedemos a filtrar
+(psd1 = subset_taxa(psd, !Phylum %in% filterPhyla))
+
+# reemplacemos los nombres por códigos ASV
+taxa_names(psd1) <- paste0("ASV", seq(ntaxa(psd1)))
+
+```
+
+* Tenemos listo nuestro objeto physeq y también es un buen momento para realizar un respaldo del ambiente de trabajo. Además, carguemos unas funciones especiales para los otros análisis.
+
+```{r eval=FALSE, comment=FALSE}
+
+# scripts
+scripts <- c("graphical_methods.R",
+         	"tree_methods.R",
+         	"plot_merged_trees.R",
+         	"specificity_methods.R",
+         	"ternary_plot.R",
+         	"richness.R",
+         	"edgePCA.R",
+         	"copy_number_correction.R",
+         	"import_frogs.R",
+         	"prevalence.R",
+         	"compute_niche.R")
+
+urls <- paste0("https://raw.githubusercontent.com/mahendra-mariadassou/phyloseq-extended/master/R/",
+           	scripts)
+
+for (url in urls) {
+  source(url)
+}
+
+```
+
+
+### Rarefacción
+
+<div style="text-align: justify">
+
+Para saber si la profundidad de secuenciación fué suficiente debemos realizar la rarefacción de las muestras. Esto es en principio homólogo a una curva de acumulación de especies y nos podrá dar indicios sí con mayor esfuerzo de secuenciación podríamos identificar mayor número de ASV
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+p_rare <- ggrare(psd1, step = 20, color = "river", label = "inv_name", se = TRUE)
+
+(p_rare <- p_rare + facet_wrap(~river))
+
+```
+
+### Alpha diversidad
+
+<div style="text-align: justify">
+
+Indica qué tan diversa es una comunidad a razón del número de especies teniendo en cuenta sus abundancias relativas. Generalmente se determina mediante los índices de diversidad, los cuales, nos permiten identificar diferentes propiedades en las comunidades de estudio. Existen muchos índices pero nos centraremos en los 3 más usuales:
+
+* Observada: Es el número de especies presentes en una comunidad.
+* Shannon: Indica la diversidad corrigiendo la riqueza con las abundancias relativas.
+* Simpson: Es una medida de homogeneidad o heterogeneidad.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+plot_richness(psd1, color = "river", x = "river", measures = c("Observed", "Shannon", "Simpson")) +
+  geom_boxplot(aes(fill = river), alpha=.7) +
+  scale_color_manual(values = c("#a6cee3", "#b2df8a", "#fdbf6f")) +
+  scale_fill_manual(values = c("#a6cee3", "#b2df8a", "#fdbf6f"))
+
+```
+
+
+<div style="text-align: justify">
+
+Si deseamos calcular otros índices para analizar diferentes propiedades de las comunidades, podemos calcular un gran número de estos y crear una tabla. En este podremos encontrar dominancia, rareza, homogeneidad entre muchos otros aspectos. Estos dependen de lo que se busca analizar.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# Índices de diversidad
+tab <- microbiome::alpha(psd1, index = "all")
+
+```
+
+
+### Beta diversidad
+
+<div style="text-align: justify">
+
+Está es una medida de diversidad entre poblaciones que expresa la relación entre varianza genética de las poblaciones y la varianza genética total. Valores altos indican que las comunidades son diferentes y valores bajos que hay poca diferenciación. Está es especialmente relevante ya que las políticas de conservación suelen enfocarse a preservar la mayor variedad posible, con lo cual, identificarla ayuda en la toma de decisiones para la conservación de la biodiversidad.
+
+</div>
+
+* Para explorar la diversidad beta mediante un ensamble multidimensional que correlaciona las especies con las comunidades
+
+```{r eval=FALSE, comment=FALSE}
+
+# Calculamos las divergencias río San Juan
+div_SanJuan <- divergence(subset_samples(psd1, river == "San_Juan"),
+                      	apply(abundances(subset_samples(psd1, river == "San_Juan")), 1, median))
+
+# Calculamos las divergencias río Atrato
+div_Atrato <- divergence(subset_samples(psd1, river == "Atrato"),
+                     	apply(abundances(subset_samples(psd1, river == "Atrato")), 1, median))
+
+# Generar dataframes
+data.frame(div_SanJuan) -> df_div_SanJuan
+data.frame(div_Atrato) -> df_div_Atrato
+
+# Gather
+df_div_SanJuan <- gather(df_div_SanJuan, sample, divergence)
+df_div_Atrato <- gather(df_div_Atrato, sample, divergence)
+
+# Agregamos columnas a nuestros _dataframes_
+mutate(df_div_SanJuan, river = "San_Juan") -> df_div_SanJuan
+mutate(df_div_Atrato, river = "Atrato") -> df_div_Atrato
+
+# Los combinamos en un _dataframe_
+rbind(df_div_SanJuan, df_div_Atrato) -> div_boxplot
+
+# Y finalmente graficamos y realizamos una comparación estadística
+p_beta <- ggboxplot(data = div_boxplot, x = "river", y = "divergence", fill = "river", palette = c("#a6cee3", "#fdbf6f"))
+
+p_beta + stat_compare_means(comparisons = list(c("San_Juan", "Atrato")))
+
+```
+
+
+### Composición
+
+<div style="text-align: justify">
+
+Alpha y Beta diversidad nos dan una perspectiva interesante de cada muestra y de la relación entre estas. Para finalizar, debemos identificar la composición de cada comunidad, y una de las maneras más sencillas son los gráficos de barras apiladas con las abundancias relativas a diferentes niveles taxonómicos.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+plot_bar(psd1, x="inv_name", fill="Phylum") + facet_wrap(~river, scales="free_x") +
+   geom_bar(aes(color=Phylum, fill=Phylum), stat="identity", position="stack")
+
+```
+
+* Debido a la gran cantidad de grupos taxonómicos, vamos a graficar los 20 más abundantes
+
+```{r eval=FALSE, comment=FALSE}
+
+# selección de los 20 más abundantes
+top20 <- names(sort(taxa_sums(psd1), decreasing=TRUE))[1:20]
+ps_top20 <- transform_sample_counts(psd1, function(OTU) OTU/sum(OTU))
+
+# filtrado
+ps_top20 <- prune_taxa(top20, ps_top20)
+
+plot_bar(ps_top20, x="inv_name", fill="Phylum") + facet_wrap(~river, scales="free_x") +
+   geom_bar(aes(color=Phylum, fill=Phylum), stat="identity", position="stack")
+
+```
+
+* Ahora para nivel de género
+
+```{r eval=FALSE, comment=FALSE}
+
+plot_bar(ps_top20, x="inv_name", fill="Genus") + facet_wrap(~river, scales="free_x") +
+   geom_bar(aes(color=Genus, fill=Genus), stat="identity", position="stack")
+
+```
+
+
+### Filogenética
+
+<div style="text-align: justify">
+
+Debido a que el gen 16S es un marcador universal, podemos hacer una inspección de las relaciones evolutivas entre los organismos identificados.
+
+</div>
+
+```{r eval=FALSE, comment=FALSE}
+
+# Árbol filogenético
+plot_tree(psd1, method = "treeonly", ladderize = "left")
+
+```
+
+
+# Conclusión
+
+<div style="text-align: justify">
+
+Las herramientas informáticas facilitan y permiten el análisis de grandes volúmenes de datos  obtenidos mediante secuenciación masiva para estudios metagenómicos. Este curso provee una completa y amplia gama de análisis para la identificación taxonómica y caracterización de comunidades microbianas de sedimentos marinos.
+
+</div>
+
+# Referencias
+
+* Callahan, B., McMurdie, P., Rosen, M. et al. DADA2: High-resolution sample inference from Illumina amplicon data. Nat Methods 13, 581–583 (2016). https://doi.org/10.1038/nmeth.3869
+
+https://benjjneb.github.io/dada2/tutorial.html
+
+* Curso MCV502 / BCM634 / BIO625 del profesor Eduardo Castro
+
+http://www.castrolab.org/teaching/data_analysis/intro-analisis-diversidad.html#diversidad-beta-y-escalamiento-multidimensional-bray-curtis-unifrac-t-sne
