@@ -249,9 +249,9 @@ Esto nos enseña algo más sobre la manera en que funciona **R**, por una parte,
 ```{r eval=FALSE, comment=FALSE}
 # función para cargar varios paquetes al tiempo
 ipak <- function(pkg) {
-  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-  if (length(new.pkg)) {
-    install.packages(new.pkg, dependencies = TRUE)
+  new_pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new_pkg)) {
+    install.packages(new_pkg, dependencies = TRUE)
   }
   sapply(pkg, require, character.only = TRUE)
 }
@@ -261,11 +261,11 @@ packages <- c(
   "BiocManager", "BiocStyle", "phangorn", "gridExtra", "devtools", "dplyr",
   "DESeq2", "phyloseq", "dada2", "DECIPHER", "knitr", "ShortRead", "stats",
   "mixOmics", "metagenomeSeq", "microbiome", "pairwiseAdonis", "nlme", "plotly",
-  "digest", "VennDiagram", "optparse", "futile.logger", "tidyverse", "kableExtra",
-  "metacoder", "amp hs2", "stats", "ggpubr", "gg scale", "reshape2", "coin"
+  "digest", "VennDiagram", "optparse", "futile.logger", "tidyverse",
+  "kableExtra", "metacoder", "amp hs2", "stats", "ggpubr", "gg scale",
+  "reshape2", "coin"
 )
 
-# función(objeto)
 ipak(packages)
 ```
 
@@ -313,7 +313,9 @@ La información más importante es la obtenida en la secuenciación, por tanto, 
 
 ```{r eval=FALSE, comment=FALSE}
 # cargar los archivos con las reads
-fq <- ShortRead::readFastq(dirPath = path, pattern = "*.fastq.gz", full.names = TRUE)
+fq <- ShortRead::readFastq(
+  dirPath = path, pattern = "*.fastq.gz", full.names = TRUE
+)
 
 # visualización
 ShortRead::sread(fq)
@@ -334,14 +336,14 @@ En este caso podemos identificar a simple vista la presencia de los *primer's* e
 list.files(path)
 
 # organizar los archivos
-fnFs <- sort(list.files(path, pattern = "_R1_001.fastq.gz", full.names = TRUE))
-fnRs <- sort(list.files(path, pattern = "_R2_001.fastq.gz", full.names = TRUE))
+fn_fs <- sort(list.files(path, pattern = "_R1_001.fastq.gz", full.names = TRUE))
+fn_rs <- sort(list.files(path, pattern = "_R2_001.fastq.gz", full.names = TRUE))
 
 # vector con los nombres
-sample.names <- sapply(strsplit(basename(fnFs), "_"), `[`, 1)
+sample_names <- sapply(strsplit(basename(fn_fs), "_"), `[`, 1)
 
 # observar algunos nombres del vector que se creó con los nombres
-head(sample.names)
+head(sample_names)
 ```
 
 <div style="text-align: justify">
@@ -352,10 +354,10 @@ Las reacciones tanto de PCR como de secuenciación suelen ocurrir errores, con l
 
 ```{r eval=FALSE, comment=FALSE}
 # lecturas forward
-plotQualityProfile((fnFs[1:2]))
+plotQualityProfile((fn_fs[1:2]))
 
 # lecturas reverse
-plotQualityProfile((fnRs[1:2]))
+plotQualityProfile((fn_rs[1:2]))
 
 # valores Q inferiores a 30 son considerados de baja calidad
 ```
@@ -377,12 +379,12 @@ Sabiendo que tenemos presencia de los *primer's* y de que la calidad de las secu
 
 ```{r eval=FALSE, comment=FALSE}
 # objetos con las secuencias filtradas
-filtFs <- file.path(path, "filtered", paste0(sample.names, "_F_filt.fastq.gz"))
-filtRs <- file.path(path, "filtered", paste0(sample.names, "_R_filt.fastq.gz"))
+filt_fs <- file.path(path, "filtered", paste0(sample_names, "_F_filt.fastq.gz"))
+filt_rs <- file.path(path, "filtered", paste0(sample_names, "_R_filt.fastq.gz"))
 
 # filtrado y corte
 
-out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs,
+out <- filterAndTrim(fn_fs, filt_fs, fn_rs, filt_rs,
   truncLen = c(280, 230), trimLeft = c(17, 21),
   maxN = 0, maxEE = c(2, 2), truncQ = 2, rm.phix = TRUE,
   compress = TRUE, multithread = FALSE
@@ -399,8 +401,8 @@ Vamos a verificar la calidad de las secuencias posteriormente al filtrado y cort
 </div>
 
 ```{r eval=FALSE, comment=FALSE}
-plotQualityProfile((filtFs[1:2]))
-plotQualityProfile((filtRs[1:2]))
+plotQualityProfile((filt_fs[1:2]))
+plotQualityProfile((filt_rs[1:2]))
 ```
 
 <div style="text-align: justify">
@@ -442,20 +444,20 @@ Se debe tener en cuenta que al ser datos metagenómicos es muy posible que tenga
 
 ```{r eval=FALSE, comment=FALSE}
 # Dereplicado
-derepFs <- derepFastq(filtFs, verbose = TRUE)
-derepRs <- derepFastq(filtRs, verbose = TRUE)
+derep_fs <- derepFastq(filt_fs, verbose = TRUE)
+derep_rs <- derepFastq(filt_rs, verbose = TRUE)
 
 # agregar nombre de los archivos dereplicados
-names(derepFs) <- sample.names
-names(derepRs) <- sample.names
+names(derep_fs) <- sample_names
+names(derep_rs) <- sample_names
 
 # modelo parametrico
-errF <- learnErrors(filtFs, multithread = TRUE)
-errR <- learnErrors(filtRs, multithread = TRUE)
+err_f <- learnErrors(filt_fs, multithread = TRUE)
+err_r <- learnErrors(filt_rs, multithread = TRUE)
 
 # ajuste del modelo a las secuencias
-plotErrors(errF, nominalQ = TRUE)
-plotErrors(errR, nominalQ = TRUE)
+plotErrors(err_f, nominalQ = TRUE)
+plotErrors(err_r, nominalQ = TRUE)
 ```
 
 <div style="text-align: justify">
@@ -474,12 +476,14 @@ Una vez calculado el modelo de error podemos proceder a la asignación o estable
 
 ```{r eval=FALSE, comment=FALSE}
 # inferencia de ASV
-dadaFs <- dada(derepFs, err = errF, multithread = TRUE, pool = TRUE) # para lecturas forward
-dadaRs <- dada(derepRs, err = errR, multithread = TRUE, pool = TRUE) # para lecturas reverse
+# para lecturas forward
+dada_fs <- dada(derep_fs, err = err_f, multithread = TRUE, pool = TRUE)
+# para lecturas reverse
+dada_rs <- dada(derep_rs, err = err_r, multithread = TRUE, pool = TRUE)
 
 # inspección del archivo dada
-dadaFs[[1]] # lecturas forward
-dadaRs[[1]] # lecturas reverse
+dada_fs[[1]] # lecturas forward
+dada_rs[[1]] # lecturas reverse
 ```
 
 ### Ensamblado
@@ -492,12 +496,12 @@ Las lecturas al ser *paired end* es necesario realizar el ensamblaje de las mism
 
 ```{r eval=FALSE, comment=FALSE}
 # ensamblado
-mergers <- mergePairs(dadaFs, derepFs, dadaRs, derepRs)
+mergers <- mergePairs(dada_fs, derep_fs, dada_rs, derep_rs)
 
 # tablas de las secuencias ensambladas
-seqtabAll <- makeSequenceTable(mergers[!grepl("mock", names(mergers))])
-table(nchar(getSequences(seqtabAll)))
-dim(seqtabAll) # dimensión de la tabla
+seq_tab_all <- makeSequenceTable(mergers[!grepl("mock", names(mergers))])
+table(nchar(getSequences(seq_tab_all)))
+dim(seq_tab_all) # dimensión de la tabla
 ```
 
 ### Quimeras
@@ -511,7 +515,7 @@ Ya se ha mencionado que en el proceso de replicación (PCR) se producen errores 
 
 ```{r eval=FALSE, comment=FALSE}
 # remoción de secuencias quiméricas
-seqtabNoC <- removeBimeraDenovo(seqtabAll)
+seq_tab_noc <- removeBimeraDenovo(seq_tab_all)
 ```
 
 
@@ -525,16 +529,20 @@ Partiendo del objeto sin quimeras **DADA2** realiza un cotejo de nuestras secuen
 
 ```{r eval=FALSE, comment=FALSE}
 # objeto con la ruta de la base de datos
-fastaRef <- "C:/Users/USUARIO/Desktop/workshop/reference_data/silva_nr99_v138.1_train_set.fa"
+fasta_ref <- "reference_data/silva_nr99_v138.1_train_set.fa"
 
 # Asignación taxonómica (hasta género)
-taxa <- assignTaxonomy(seqtabNoC, fastaRef, multithread = TRUE)
+taxa <- assignTaxonomy(seq_tab_noc, fasta_ref, multithread = TRUE)
 
 # Tabla de identificación
 write.csv(taxa, "tabla_genus_id_taxa_silva138.csv")
 
 # Tabla hasta nivel de especie
-taxa_sp <- addSpecies(taxa, "C:/Users/USUARIO/Desktop/workshop/reference_data/silva_species_assignment_v138.1.fa", verbose = TRUE)
+taxa_sp <- addSpecies(
+  taxa,
+  "reference_data/silva_species_assignment_v138.1.fa",
+  verbose = TRUE
+)
 
 # Tabla de identificación
 write.csv(taxa_sp, "tabla_sp_id_taxa_silva138.csv")
@@ -549,35 +557,35 @@ Recordemos que estas secuencias hacen parte de una región hiper variante del ge
 * Separemos las secuencias en 1 objeto y las alineamos
 
 ```{r eval=FALSE, comment=FALSE}
-seqs <- getSequences(seqtabNoC)
+seqs <- getSequences(seq_tab_noc)
 
 # asignar nombres a cada secuencia
 names(seqs) <- seqs
 
 # alineamiento de la secuencias
-alignment <- AlignSeqs(DNAStringSet(seqs), anchor = NA, verbose = F)
+alignment <- AlignSeqs(DNAStringSet(seqs), anchor = NA, verbose = FALSE)
 ```
 
 * Con el alineamiento generamos un árbol inicial mediante *neighbor joining* (N-J) desde el cual podremos hacer una búsqueda del mejor árbol basado en máxima verosimilitud ajustado a un modelo de evolución nucleotídica GTR optimizando las posiciones invariantes y el parámetro gamma.
 
 ```{r eval=FALSE, comment=FALSE}
 #  Crear objeto phyDat
-phangAlign <- phyDat(as(alignment, "matrix"), type = "DNA")
+phang_align <- phyDat(as(alignment, "matrix"), type = "DNA")
 
 # Distancias pareadas entre las secuencias
-dm <- dist.ml(phangAlign)
+dm <- dist.ml(phang_align)
 
 # Árbol Neighbor-Joining
-treeNJ <- NJ(dm)
+tree_nj <- NJ(dm)
 
 # Verosimilitud del árbol
-fit <- pml(treeNJ, data = phangAlign)
+fit <- pml(tree_nj, data = phang_align)
 
 # Agregan parámetros
-fitGTR <- update(fit, k = 4, inv = 0.2)
+fit_gtr <- update(fit, k = 4, inv = 0.2)
 
 # optimizamos el modelo
-fitGTR <- optim.pml(fitGTR,
+fit_gtr <- optim.pml(fit_gtr,
   model = "GTR", optInv = TRUE, optGamma = TRUE,
   rearrangement = "NNI", control = pml.control(trace = 0)
 )
@@ -596,19 +604,20 @@ En este punto ya tenemos la información más importante que podemos obtener, qu
 
 ```{r eval=FALSE, comment=FALSE}
 # Cambiamos la ruta donde está archivo "metadata_workshop.csv"
-samdf <- read.csv("C:/Users/USUARIO/Desktop/workshop/metadata/metadata_workshop.csv",
+samdf <- read.csv(
+  "C:/Users/USUARIO/Desktop/workshop/metadata/metadata_workshop.csv",
   header = TRUE, row.names = 1
 )
 # Verificar nombres de las tablas y la metadata
-rownames(seqtabNoC) %in% rownames(samdf)
-all(rownames(seqtabNoC) %in% rownames(samdf))
+rownames(seq_tab_noc) %in% rownames(samdf)
+all(rownames(seq_tab_noc) %in% rownames(samdf))
 
 # Crear objeto physeq
 ps_16s <- phyloseq(
-  otu_table(seqtabNoC, taxa_are_rows = FALSE),
+  otu_table(seq_tab_noc, taxa_are_rows = FALSE),
   sample_data(samdf),
   tax_table(taxa),
-  phy_tree(fitGTR$tree)
+  phy_tree(fit_gtr$tree)
 )
 
 # Inspección del objeto
@@ -667,20 +676,21 @@ plyr::ddply(
 
 dfprev
 
-# es pertinente filtrar esos filo representados sólo por 1 read ya pueden ser falsos positivos
+# es pertinente filtrar esos filo representados sólo por 1 read ya pueden ser
+# falsos positivos
 ```
 
 * Ya identificados, vamos a removerlos de nuestro objeto de trabajo
 
 ```{r eval=FALSE, comment=FALSE}
 # Indicamos aquellos filo a remover
-filterPhyla <- c(
+filter_phyla <- c(
   "Dadabacteria", "Deinococcota", "Euryarchaeota", "Fusobacteriota", "FW113",
   "LCP-89", "Modulibacteria", "RCP2-54", "WPS-2", "CK-2C2-2", "Asgardarchaeota"
 )
 
 # Procedemos a filtrar
-(psd1 <- subset_taxa(psd, !Phylum %in% filterPhyla))
+(psd1 <- subset_taxa(psd, !Phylum %in% filter_phyla))
 
 # reemplacemos los nombres por códigos ASV
 taxa_names(psd1) <- paste0("ASV", seq(ntaxa(psd1)))
@@ -705,7 +715,8 @@ scripts <- c(
 )
 
 urls <- paste0(
-  "https://raw.githubusercontent.com/mahendra-mariadassou/phyloseq-extended/master/R/",
+  "https://raw.githubusercontent.com/",
+  "mahendra-mariadassou/phyloseq-extended/master/R/",
   scripts
 )
 
@@ -724,7 +735,10 @@ Para saber si la profundidad de secuenciación fué suficiente debemos realizar 
 </div>
 
 ```{r eval=FALSE, comment=FALSE}
-p_rare <- ggrare(psd1, step = 20, color = "river", label = "inv_name", se = TRUE)
+p_rare <- ggrare(
+  psd1,
+  step = 20, color = "river", label = "inv_name", se = TRUE
+)
 
 (p_rare <- p_rare + facet_wrap(~river))
 ```
@@ -742,7 +756,10 @@ Indica qué tan diversa es una comunidad a razón del número de especies tenien
 </div>
 
 ```{r eval=FALSE, comment=FALSE}
-plot_richness(psd1, color = "river", x = "river", measures = c("Observed", "Shannon", "Simpson")) +
+plot_richness(psd1,
+  color = "river", x = "river",
+  measures = c("Observed", "Shannon", "Simpson")
+) +
   geom_boxplot(aes(fill = river), alpha = .7) +
   scale_color_manual(values = c("#a6cee3", "#b2df8a", "#fdbf6f")) +
   scale_fill_manual(values = c("#a6cee3", "#b2df8a", "#fdbf6f"))
@@ -773,34 +790,37 @@ Está es una medida de diversidad entre poblaciones que expresa la relación ent
 
 ```{r eval=FALSE, comment=FALSE}
 # Calculamos las divergencias río San Juan
-div_SanJuan <- divergence(
+div_san_juan <- divergence(
   subset_samples(psd1, river == "San_Juan"),
   apply(abundances(subset_samples(psd1, river == "San_Juan")), 1, median)
 )
 
 # Calculamos las divergencias río Atrato
-div_Atrato <- divergence(
+div_atrato <- divergence(
   subset_samples(psd1, river == "Atrato"),
   apply(abundances(subset_samples(psd1, river == "Atrato")), 1, median)
 )
 
 # Generar dataframes
-data.frame(div_SanJuan) -> df_div_SanJuan
-data.frame(div_Atrato) -> df_div_Atrato
+data.frame(div_san_juan) -> df_div_san_juan
+data.frame(div_atrato) -> df_div_atrato
 
 # Gather
-df_div_SanJuan <- gather(df_div_SanJuan, sample, divergence)
-df_div_Atrato <- gather(df_div_Atrato, sample, divergence)
+df_div_san_juan <- gather(df_div_san_juan, sample, divergence)
+df_div_atrato <- gather(df_div_atrato, sample, divergence)
 
 # Agregamos columnas a nuestros _dataframes_
-mutate(df_div_SanJuan, river = "San_Juan") -> df_div_SanJuan
-mutate(df_div_Atrato, river = "Atrato") -> df_div_Atrato
+mutate(df_div_san_juan, river = "San_Juan") -> df_div_san_juan
+mutate(df_div_atrato, river = "Atrato") -> df_div_atrato
 
 # Los combinamos en un _dataframe_
-rbind(df_div_SanJuan, df_div_Atrato) -> div_boxplot
+rbind(df_div_san_juan, df_div_atrato) -> div_boxplot
 
 # Y finalmente graficamos y realizamos una comparación estadística
-p_beta <- ggboxplot(data = div_boxplot, x = "river", y = "divergence", fill = "river", palette = c("#a6cee3", "#fdbf6f"))
+p_beta <- ggboxplot(
+  data = div_boxplot, x = "river", y = "divergence",
+  fill = "river", palette = c("#a6cee3", "#fdbf6f")
+)
 
 p_beta + stat_compare_means(comparisons = list(c("San_Juan", "Atrato")))
 ```
@@ -815,8 +835,12 @@ Alpha y Beta diversidad nos dan una perspectiva interesante de cada muestra y de
 </div>
 
 ```{r eval=FALSE, comment=FALSE}
-plot_bar(psd1, x = "inv_name", fill = "Phylum") + facet_wrap(~river, scales = "free_x") +
-  geom_bar(aes(color = Phylum, fill = Phylum), stat = "identity", position = "stack")
+plot_bar(psd1, x = "inv_name", fill = "Phylum") +
+  facet_wrap(~river, scales = "free_x") +
+  geom_bar(
+    aes(color = Phylum, fill = Phylum),
+    stat = "identity", position = "stack"
+  )
 ```
 
 * Debido a la gran cantidad de grupos taxonómicos, vamos a graficar los 20 más abundantes
@@ -824,20 +848,28 @@ plot_bar(psd1, x = "inv_name", fill = "Phylum") + facet_wrap(~river, scales = "f
 ```{r eval=FALSE, comment=FALSE}
 # selección de los 20 más abundantes
 top20 <- names(sort(taxa_sums(psd1), decreasing = TRUE))[1:20]
-ps_top20 <- transform_sample_counts(psd1, function(OTU) OTU / sum(OTU))
+ps_top20 <- transform_sample_counts(psd1, function(otu) otu / sum(otu))
 
 # filtrado
 ps_top20 <- prune_taxa(top20, ps_top20)
 
-plot_bar(ps_top20, x = "inv_name", fill = "Phylum") + facet_wrap(~river, scales = "free_x") +
-  geom_bar(aes(color = Phylum, fill = Phylum), stat = "identity", position = "stack")
+plot_bar(ps_top20, x = "inv_name", fill = "Phylum") +
+  facet_wrap(~river, scales = "free_x") +
+  geom_bar(
+    aes(color = Phylum, fill = Phylum),
+    stat = "identity", position = "stack"
+  )
 ```
 
 * Ahora para nivel de género
 
 ```{r eval=FALSE, comment=FALSE}
-plot_bar(ps_top20, x = "inv_name", fill = "Genus") + facet_wrap(~river, scales = "free_x") +
-  geom_bar(aes(color = Genus, fill = Genus), stat = "identity", position = "stack")
+plot_bar(ps_top20, x = "inv_name", fill = "Genus") +
+  facet_wrap(~river, scales = "free_x") +
+  geom_bar(
+    aes(color = Genus, fill = Genus),
+    stat = "identity", position = "stack"
+  )
 ```
 
 
