@@ -300,7 +300,7 @@ Es importante indicar en donde se encuentran los datos, por tanto, debemos selec
 setwd("C:/Users/USUARIO/Desktop/workshop")
 
 # Ruta de las secuencias
-path <- "C:/Users/USUARIO/Desktop/workshop/data_set/"
+path <- "data_set/"
 ```
 
 ### Pre-tratamiento de secuencias
@@ -421,10 +421,10 @@ saveRDS(objeto, file = "nombre del archivo.RDS")
 # Estos se guardaran automáticamente dentro del repositorio de trabajo
 
 # cargar el ambiente de trabajo
-load("C:/Users/USUARIO/Desktop/workshop/nombre del archivo .RData")
+load("nombre del archivo.RData")
 
 #
-nombre <- readRDS("C:/Users/USUARIO/Desktop/workshop/nombre del archivo .RDS")
+nombre <- readRDS("nombre del archivo.RDS")
 ```
 
 
@@ -605,7 +605,7 @@ En este punto ya tenemos la información más importante que podemos obtener, qu
 ```{r eval=FALSE, comment=FALSE}
 # Cambiamos la ruta donde está archivo "metadata_workshop.csv"
 samdf <- read.csv(
-  "C:/Users/USUARIO/Desktop/workshop/metadata/metadata_workshop.csv",
+  "metadata/metadata_workshop.csv",
   header = TRUE, row.names = 1
 )
 # Verificar nombres de las tablas y la metadata
